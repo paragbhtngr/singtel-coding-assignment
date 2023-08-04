@@ -1,0 +1,15 @@
+:root {
+  --desktop-width: 60px;
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #5c50bb;
+  --form-control-color: #5c50bb;
+  --form-control-border-color: #a8a8a8;
+  --primary-highlight-color: #efedfd;
+  --overlay-color: #f7f7f7;
+  --table-divider-color: #e1e1e1;
+}
+
+body {
+  font-family: "Avenir", Arial, Helvetica, sans-serif;
+}

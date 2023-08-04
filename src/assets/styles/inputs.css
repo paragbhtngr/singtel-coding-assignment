@@ -1,0 +1,107 @@
+@import "theme.css";
+
+.checkbox,
+.radio {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.checkbox input[type="checkbox"],
+.radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox label,
+.radio label {
+  margin-left: 16px;
+}
+
+.checkbox .checkmark {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--form-control-border-color);
+  background-color: var(--background-color);
+  border-radius: 4px;
+}
+
+.checkbox input[type="checkbox"]:checked ~ .checkmark:after {
+  content: "";
+  background-image: url("../images/check.svg");
+  background-size: contain;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 6px;
+  left: 6px;
+}
+
+.checkbox input[type="checkbox"]:checked ~ .checkmark,
+.radio input[type="radio"]:checked ~ .radiomark {
+  background-color: var(--form-control-color);
+  border: 1px solid var(--form-control-color);
+}
+
+.radio .radiomark {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--form-control-border-color);
+  background-color: var(--background-color);
+  border-radius: 100%;
+}
+
+.radio input[type="radio"]:checked ~ .radiomark:after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 6px;
+  left: 6px;
+}
+
+.radio input[type="radio"]:checked ~ .radiomark:after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  top: 6px;
+  left: 6px;
+  background-color: var(--background-color);
+}
+
+/* Desktop layouts */
+@media only screen and (min-width: 768px) {
+  .checkbox,
+  .radio {
+    font-size: 24px;
+  }
+
+  .checkbox .checkmark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .radio .radiomark {
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+  }
+
+  .checkbox input[type="checkbox"]:checked ~ .checkmark:after,
+  .radio input[type="radio"]:checked ~ .radiomark:after {
+    width: 16px;
+    height: 16px;
+    top: 8px;
+    left: 8px;
+    border-radius: 100%;
+  }
+}
