@@ -1,7 +1,7 @@
 @import "theme.css";
 
 .table {
-  border-radius: 16px;
+  border-radius: 8px;
   font-size: 16px;
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.12);
   font-family: "Avenir Book", Arial, Helvetica, sans-serif;
@@ -14,11 +14,15 @@
   background-color: var(--overlay-color);
   font-family: "Avenir Heavy", Arial, Helvetica, sans-serif;
   border-color: var(--overlay-color);
+  white-space: nowrap;
 }
 
 .table td,
 .table th {
-  padding: 24px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .table tbody tr {
   position: relative;
@@ -35,17 +39,32 @@
   background: var(--table-divider-color);
 }
 
+.table .list-layout {
+  vertical-align: top;
+}
+
+.table .list-layout ul {
+  margin: 0;
+  list-style: none;
+  padding-left: 0px;
+}
+
+.table .list-layout ul > li .header {
+  font-family: "Avenir Heavy", "Avenir", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
 .table .sort-button {
   border: none;
-  height: 56px;
-  width: 52px;
   margin-left: 8px;
   background-color: transparent;
   display: inline-block;
   vertical-align: bottom;
   border-radius: 100%;
-  margin-top: -14px;
-  margin-bottom: -14px;
+  height: 32px;
+  width: 32px;
+  margin-top: 0px;
+  margin-bottom: -4px;
   cursor: pointer;
 }
 
@@ -64,12 +83,17 @@
   padding: 24px;
 }
 
+.table tr .row-select {
+  padding-right: 0px;
+}
+
 .table tr.selected {
   background-color: var(--primary-highlight-color);
 }
 
 @media only screen and (min-width: 768px) {
   .table {
+    border-radius: 16px;
     font-size: 18px;
   }
 }
@@ -77,5 +101,19 @@
 @media only screen and (min-width: 992px) {
   .table {
     font-size: 20px;
+  }
+  .table td,
+  .table th {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .table .sort-button {
+    height: 56px;
+    width: 52px;
+    margin-top: -14px;
+    margin-bottom: -14px;
   }
 }

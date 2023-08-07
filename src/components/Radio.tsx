@@ -12,7 +12,7 @@ const Radio = ({ isSelected, handleClick, children }: IRadioProps) => {
     <div className="radio" onClick={handleClick}>
       <input type="radio" checked={isSelected} />
       <span className="radiomark"></span>
-      <label>{children}</label>
+      {children && <label>{children}</label>}
     </div>
   );
 };

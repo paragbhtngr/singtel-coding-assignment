@@ -12,7 +12,7 @@ const Checkbox = ({ isSelected, handleClick, children }: ICheckboxProps) => {
     <div className="checkbox" onClick={handleClick}>
       <input type="checkbox" checked={isSelected} />
       <span className="checkmark"></span>
-      <label>{children}</label>
+      {children && <label>{children}</label>}
     </div>
   );
 };
