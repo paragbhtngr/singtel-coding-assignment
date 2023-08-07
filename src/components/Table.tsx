@@ -28,26 +28,30 @@ interface ITableProps {
   sortable?: boolean;
   selectable?: boolean;
   showHeader?: boolean;
+  useListLayout?: boolean;
   selectionType?: SelectionType;
   headers: Header[];
   data: Record<string, string>[];
 }
 
 interface IHeaderRowProps {
+  name?: string;
   headers: Header[];
   selectable?: boolean;
   sortColumn?: string;
   sortOrder?: SortOrder;
+  useListLayout?: boolean;
   handleSortColumn?: (column: string) => void;
   handleSortOrder?: (order: SortOrder) => void;
 }
 
 interface IRowProps {
-  headerNames: string[];
+  headers: Header[];
   data: Record<string, string>;
   selectable?: boolean;
   selectionType?: SelectionType;
   isSelected?: boolean;
+  useListLayout?: boolean;
   handleSelectRow?: () => void;
 }
 
@@ -115,6 +119,8 @@ const Table = (props: ITableProps) => {
       {props.showHeader || props.headers.length > 0 ? (
         <>
           <HeaderRow
+            name={props.name}
+            useListLayout={props.useListLayout}
             headers={props.headers}
             selectable={props.selectable}
             {...sortProps}
@@ -122,9 +128,10 @@ const Table = (props: ITableProps) => {
           <tbody>
             {props.data.map((rowData, index) => (
               <Row
+                useListLayout={props.useListLayout}
                 key={Object.values(rowData)[0] + index}
                 data={rowData}
-                headerNames={props.headers.map((h: Header) => h.name)}
+                headers={props.headers}
                 selectable={props.selectable}
                 selectionType={props.selectionType}
                 isSelected={selectedRows.includes(
@@ -146,51 +153,69 @@ const HeaderRow = (props: IHeaderRowProps) => {
   return (
     <thead>
       <tr>
-        {props.selectable ? <th></th> : null}
-        {props.headers.map((headerData) => (
-          <th key={headerData.name}>
-            <span>{headerData.title}</span>
-            {headerData.sortable ? (
-              <span>
-                {props.sortColumn === headerData.name ? (
-                  props.sortOrder === SortOrder.Ascending ? (
-                    <button
-                      className="sort-button"
-                      onClick={() =>
-                        props.handleSortOrder?.(SortOrder.Descending)
-                      }
-                    >
-                      <img src={ArrowUpIcon} />
-                    </button>
-                  ) : (
-                    <button
-                      className="sort-button"
-                      onClick={() =>
-                        props.handleSortOrder?.(SortOrder.Ascending)
-                      }
-                    >
-                      <img src={ArrowDownIcon} />
-                    </button>
-                  )
-                ) : (
-                  <button
-                    className="sort-button"
-                    onClick={() => props.handleSortColumn?.(headerData.name)}
-                  >
-                    <img src={ArrowBothIcon} />
-                  </button>
-                )}
-              </span>
-            ) : null}
-          </th>
-        ))}
+        {props.useListLayout ? (
+          <>
+            {props.name && (
+              <>
+                {props.selectable ? <th></th> : null}
+                <th>
+                  <span>{props.name}</span>
+                </th>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {props.selectable ? <th></th> : null}
+            {props.headers.map((headerData) => (
+              <th key={headerData.name}>
+                <span>{headerData.title}</span>
+                {headerData.sortable ? (
+                  <span>
+                    {props.sortColumn === headerData.name ? (
+                      props.sortOrder === SortOrder.Ascending ? (
+                        <button
+                          className="sort-button"
+                          onClick={() =>
+                            props.handleSortOrder?.(SortOrder.Descending)
+                          }
+                        >
+                          <img src={ArrowUpIcon} />
+                        </button>
+                      ) : (
+                        <button
+                          className="sort-button"
+                          onClick={() =>
+                            props.handleSortOrder?.(SortOrder.Ascending)
+                          }
+                        >
+                          <img src={ArrowDownIcon} />
+                        </button>
+                      )
+                    ) : (
+                      <button
+                        className="sort-button"
+                        onClick={() =>
+                          props.handleSortColumn?.(headerData.name)
+                        }
+                      >
+                        <img src={ArrowBothIcon} />
+                      </button>
+                    )}
+                  </span>
+                ) : null}
+              </th>
+            ))}
+          </>
+        )}
       </tr>
     </thead>
   );
 };
 
 const Row = ({
-  headerNames,
+  useListLayout,
+  headers,
   selectable,
   isSelected,
   selectionType,
@@ -198,7 +223,11 @@ const Row = ({
   handleSelectRow,
 }: IRowProps) => {
   return (
-    <tr className={isSelected ? "selected" : ""}>
+    <tr
+      className={`${isSelected ? "selected" : ""} ${
+        useListLayout ? "list-layout" : ""
+      }`}
+    >
       {selectable ? (
         selectionType === SelectionType.Radio ? (
           <td className="row-select">
@@ -210,9 +239,24 @@ const Row = ({
           </td>
         )
       ) : null}
-      {headerNames.map((h, index) => (
-        <td key={index}>{data[h] ? data[h] : "N/A"}</td>
-      ))}
+      {useListLayout ? (
+        <td>
+          <ul className="table-list">
+            {headers.map((h) => (
+              <li key={h.name}>
+                <span className="header">{h.title}:</span>{" "}
+                <span>{data[h.name] ? data[h.name] : "N/A"}</span>
+              </li>
+            ))}
+          </ul>
+        </td>
+      ) : (
+        <>
+          {headers.map((h) => (
+            <td key={h.name}>{data[h.name] ? data[h.name] : "N/A"}</td>
+          ))}
+        </>
+      )}
     </tr>
   );
 };
