@@ -2,17 +2,28 @@ import React, { ReactNode } from "react";
 import "../assets/styles/globals.css";
 
 interface IRadioProps {
+  id?: string;
   handleClick?: () => void;
   isSelected?: boolean;
   children?: string | ReactNode;
+  color?: string;
 }
 
-const Radio = ({ isSelected, handleClick, children }: IRadioProps) => {
+const Radio = ({
+  id,
+  isSelected,
+  handleClick,
+  children,
+  color,
+}: IRadioProps) => {
   return (
-    <div className="radio" onClick={handleClick}>
-      <input type="radio" checked={isSelected} />
-      <span className="radiomark"></span>
-      {children && <label>{children}</label>}
+    <div className="radio" data-testid={id} id={id} onClick={handleClick}>
+      <input type="radio" readOnly checked={isSelected} />
+      <span
+        className="radiomark"
+        style={color && isSelected ? { backgroundColor: color } : {}}
+      ></span>
+      {children && <label htmlFor={id}>{children}</label>}
     </div>
   );
 };

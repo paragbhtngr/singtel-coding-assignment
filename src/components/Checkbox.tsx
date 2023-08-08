@@ -2,17 +2,28 @@ import React, { ReactNode } from "react";
 import "../assets/styles/globals.css";
 
 interface ICheckboxProps {
+  id?: string;
   handleClick?: () => void;
   isSelected?: boolean;
   children?: string | ReactNode;
+  color?: string;
 }
 
-const Checkbox = ({ isSelected, handleClick, children }: ICheckboxProps) => {
+const Checkbox = ({
+  id,
+  isSelected,
+  handleClick,
+  children,
+  color,
+}: ICheckboxProps) => {
   return (
-    <div className="checkbox" onClick={handleClick}>
-      <input type="checkbox" checked={isSelected} />
-      <span className="checkmark"></span>
-      {children && <label>{children}</label>}
+    <div className="checkbox" data-testid={id} id={id} onClick={handleClick}>
+      <input type="checkbox" readOnly checked={isSelected} />
+      <span
+        className="checkmark"
+        style={color && isSelected ? { backgroundColor: color } : {}}
+      ></span>
+      {children && <label htmlFor={id}>{children}</label>}
     </div>
   );
 };

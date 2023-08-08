@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 
-.table th {
+.table thead {
   background-color: var(--overlay-color);
   font-family: "Avenir Heavy", Arial, Helvetica, sans-serif;
   border-color: var(--overlay-color);
@@ -79,10 +79,6 @@
   background-color: transparent;
 }
 
-.table tr .radio {
-  padding: 24px;
-}
-
 .table tr .row-select {
   padding-right: 0px;
 }
@@ -95,6 +91,10 @@
   .table {
     border-radius: 16px;
     font-size: 18px;
+  }
+  .table tr .radio,
+  table tr .checkbox {
+    padding: 24px;
   }
 }
 
