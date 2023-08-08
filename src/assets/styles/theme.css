@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/avenir");
+
 :root {
   --desktop-width: 60px;
   --background-color: #ffffff;
@@ -11,5 +13,13 @@
 }
 
 body {
-  font-family: "Avenir Book", "Avenir", Arial, Helvetica, sans-serif;
+  font-family: "Avenir", Arial, Helvetica, sans-serif;
+}
+
+code {
+  background: #eee;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: orangered;
+  margin-bottom: 2px;
 }

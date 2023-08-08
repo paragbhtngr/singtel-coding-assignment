@@ -21,7 +21,14 @@ const Radio = ({
       <input type="radio" readOnly checked={isSelected} />
       <span
         className="radiomark"
-        style={color && isSelected ? { backgroundColor: color } : {}}
+        style={
+          color && isSelected
+            ? {
+                backgroundColor: color,
+                borderColor: color,
+              }
+            : {}
+        }
       ></span>
       {children && <label htmlFor={id}>{children}</label>}
     </div>
