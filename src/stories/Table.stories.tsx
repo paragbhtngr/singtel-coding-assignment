@@ -16,7 +16,7 @@ const meta: Meta<typeof Table> = {
         <div
           style={{
             width: 600,
-            height: 500,
+            height: 1000,
             border: `1px dashed #9747FF`,
             borderRadius: 4,
             padding: 20,

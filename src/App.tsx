@@ -7,24 +7,34 @@ export default function App() {
       <h1>Hello CodeSandbox</h1>
       <h2>Start editing to see some magic happen!</h2>
       <Table
-        useListLayout
-        sortable
         selectable
         selectionType={SelectionType.Checkbox}
+        selectorColor={"blue"}
+        headerStyle={{
+          backgroundColor: "blue",
+          color: "White",
+        }}
+        rowStyle={{
+          backgroundColor: "lightblue",
+        }}
+        selectedRowStyle={{
+          backgroundColor: "skyblue",
+        }}
         headers={[
           {
             name: "operator",
             title: "Operator",
-            sortable: true,
+            // sortable: true,
           },
           {
             name: "headsetDisplay",
             title: "Headset Display",
-            sortable: true,
+            // sortable: true,
           },
           {
             name: "3gAvailability",
             title: "3G Availability",
+            alignment: "right",
           },
         ]}
         data={[

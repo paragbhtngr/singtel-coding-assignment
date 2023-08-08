@@ -21,17 +21,28 @@ interface Header {
   name: string;
   title: string;
   sortable?: boolean;
+  alignment?:
+    | "start"
+    | "end"
+    | "left"
+    | "right"
+    | "center"
+    | "justify"
+    | undefined;
 }
 
 interface ITableProps {
   name?: string;
-  sortable?: boolean;
   selectable?: boolean;
-  showHeader?: boolean;
+  hideHeader?: boolean;
   useListLayout?: boolean;
   selectionType?: SelectionType;
   headers: Header[];
   data: Record<string, string>[];
+  headerStyle?: React.CSSProperties;
+  rowStyle?: React.CSSProperties;
+  selectedRowStyle?: React.CSSProperties;
+  selectorColor?: string;
 }
 
 interface IHeaderRowProps {
@@ -43,6 +54,7 @@ interface IHeaderRowProps {
   useListLayout?: boolean;
   handleSortColumn?: (column: string) => void;
   handleSortOrder?: (order: SortOrder) => void;
+  headerStyle?: React.CSSProperties;
 }
 
 interface IRowProps {
@@ -53,6 +65,9 @@ interface IRowProps {
   isSelected?: boolean;
   useListLayout?: boolean;
   handleSelectRow?: () => void;
+  style?: React.CSSProperties;
+  selectedStyle?: React.CSSProperties;
+  selectorColor?: string;
 }
 
 const Table = (props: ITableProps) => {
@@ -62,13 +77,16 @@ const Table = (props: ITableProps) => {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!props.sortable || sortOrder === SortOrder.Unsorted || !sortColumn) {
+    if (sortOrder === SortOrder.Unsorted || !sortColumn) {
       setData(data);
     } else {
       const newData = props.data.sort((a, b): number => {
-        if (a[sortColumn] === undefined) return -1;
-        if (b[sortColumn] === undefined) return 1;
-        else if (sortOrder === SortOrder.Ascending) {
+        if (a[sortColumn] === undefined) {
+          return -1;
+        }
+        if (b[sortColumn] === undefined) {
+          return 1;
+        } else if (sortOrder === SortOrder.Ascending) {
           return a[sortColumn] <= b[sortColumn] ? 1 : -1;
         } else {
           return a[sortColumn] <= b[sortColumn] ? -1 : 1;
@@ -105,53 +123,51 @@ const Table = (props: ITableProps) => {
     }
   };
 
-  const sortProps = {
-    ...(props.sortable && {
-      sortColumn: sortColumn,
-      sortOrder: sortOrder,
-      handleSortColumn: handleSetSortColumn,
-      handleSortOrder: handleSetSortOrder,
-    }),
-  };
-
   return (
     <table className="table">
-      {props.showHeader || props.headers.length > 0 ? (
+      {!props.hideHeader ? (
         <>
           <HeaderRow
             name={props.name}
             useListLayout={props.useListLayout}
             headers={props.headers}
             selectable={props.selectable}
-            {...sortProps}
+            sortColumn={sortColumn}
+            sortOrder={sortOrder}
+            handleSortColumn={handleSetSortColumn}
+            handleSortOrder={handleSetSortOrder}
+            headerStyle={props.headerStyle}
           />
-          <tbody>
-            {props.data.map((rowData, index) => (
-              <Row
-                useListLayout={props.useListLayout}
-                key={Object.values(rowData)[0] + index}
-                data={rowData}
-                headers={props.headers}
-                selectable={props.selectable}
-                selectionType={props.selectionType}
-                isSelected={selectedRows.includes(
-                  Object.values(rowData)[0] + index
-                )}
-                handleSelectRow={() =>
-                  handleSelectRow(Object.values(rowData)[0] + index)
-                }
-              />
-            ))}
-          </tbody>
         </>
       ) : null}
+      <tbody>
+        {props.data.map((rowData, index) => (
+          <Row
+            useListLayout={props.useListLayout}
+            key={Object.values(rowData)[0] + index}
+            data={rowData}
+            headers={props.headers}
+            selectable={props.selectable}
+            selectionType={props.selectionType}
+            isSelected={selectedRows.includes(
+              Object.values(rowData)[0] + index
+            )}
+            handleSelectRow={() =>
+              handleSelectRow(Object.values(rowData)[0] + index)
+            }
+            style={props.rowStyle}
+            selectedStyle={props.selectedRowStyle}
+            selectorColor={props.selectorColor}
+          />
+        ))}
+      </tbody>
     </table>
   );
 };
 
 const HeaderRow = (props: IHeaderRowProps) => {
   return (
-    <thead>
+    <thead style={props.headerStyle ?? {}}>
       <tr>
         {props.useListLayout ? (
           <>
@@ -168,7 +184,14 @@ const HeaderRow = (props: IHeaderRowProps) => {
           <>
             {props.selectable ? <th></th> : null}
             {props.headers.map((headerData) => (
-              <th key={headerData.name}>
+              <th
+                key={headerData.name}
+                style={{
+                  ...(headerData.alignment && {
+                    textAlign: headerData.alignment,
+                  }),
+                }}
+              >
                 <span>{headerData.title}</span>
                 {headerData.sortable ? (
                   <span>
@@ -213,47 +236,57 @@ const HeaderRow = (props: IHeaderRowProps) => {
   );
 };
 
-const Row = ({
-  useListLayout,
-  headers,
-  selectable,
-  isSelected,
-  selectionType,
-  data,
-  handleSelectRow,
-}: IRowProps) => {
+const Row = (props: IRowProps) => {
   return (
     <tr
-      className={`${isSelected ? "selected" : ""} ${
-        useListLayout ? "list-layout" : ""
+      className={`${props.isSelected ? "selected" : ""} ${
+        props.useListLayout ? "list-layout" : ""
       }`}
+      style={props.isSelected ? props.selectedStyle : props.style}
     >
-      {selectable ? (
-        selectionType === SelectionType.Radio ? (
+      {props.selectable ? (
+        props.selectionType === SelectionType.Radio ? (
           <td className="row-select">
-            <Radio isSelected={isSelected} handleClick={handleSelectRow} />
+            <Radio
+              isSelected={props.isSelected}
+              handleClick={props.handleSelectRow}
+              color={props.selectorColor}
+            />
           </td>
         ) : (
           <td className="row-select">
-            <Checkbox isSelected={isSelected} handleClick={handleSelectRow} />
+            <Checkbox
+              isSelected={props.isSelected}
+              handleClick={props.handleSelectRow}
+              color={props.selectorColor}
+            />
           </td>
         )
       ) : null}
-      {useListLayout ? (
+      {props.useListLayout ? (
         <td>
           <ul className="table-list">
-            {headers.map((h) => (
+            {props.headers.map((h) => (
               <li key={h.name}>
                 <span className="header">{h.title}:</span>{" "}
-                <span>{data[h.name] ? data[h.name] : "N/A"}</span>
+                <span>{props.data[h.name] ? props.data[h.name] : "N/A"}</span>
               </li>
             ))}
           </ul>
         </td>
       ) : (
         <>
-          {headers.map((h) => (
-            <td key={h.name}>{data[h.name] ? data[h.name] : "N/A"}</td>
+          {props.headers.map((h) => (
+            <td
+              key={h.name}
+              style={{
+                ...(h.alignment && {
+                  textAlign: h.alignment,
+                }),
+              }}
+            >
+              {props.data[h.name] ? props.data[h.name] : "N/A"}
+            </td>
           ))}
         </>
       )}
