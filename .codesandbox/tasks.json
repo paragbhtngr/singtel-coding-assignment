@@ -34,7 +34,11 @@
     },
     "storybook": {
       "name": "storybook",
-      "command": "storybook"
+      "command": "yarn storybook",
+      "runAtStart": true,
+      "preview": {
+        "port": 3000
+      }
     }
   }
 }
